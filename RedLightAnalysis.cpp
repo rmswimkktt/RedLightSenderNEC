@@ -59,3 +59,37 @@ void RedLightAnalysis::measureInterval(){
     }
   }
 }
+
+void RedLightAnalysis::measure(){
+  const unsigned long BOUND = 850;
+  const unsigned int BUFF_SIZE = 12;
+  byte method[BUFF_SIZE] = {};
+
+  unsigned long ti;
+
+  for(int k = 0; k < 2; k++){
+    while(digitalRead(m_redPin) == HIGH){}
+    while(digitalRead(m_redPin) == LOW){}
+    while(digitalRead(m_redPin) == HIGH){}
+    for(int j = 0; j < BUFF_SIZE; j++){
+      for(int i = 3; i >= 0; i--){
+
+        while(digitalRead(m_redPin) == LOW){}
+
+        ti = micros();
+        while(digitalRead(m_redPin) == HIGH){}
+        method[j] << 1;
+        if(BOUND < (micros() - ti)){
+          bitClear(method[j], i);
+        }else{
+          bitSet(method[j], i);
+        }
+      }
+    }
+    while(digitalRead(m_redPin) == LOW){}
+  }
+
+  for(int i = 0; i < BUFF_SIZE; i++){
+    Serial.println(method[i], HEX);
+  }
+}

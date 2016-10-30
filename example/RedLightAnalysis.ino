@@ -16,6 +16,7 @@ void setup(){
 
 void loop(){
   //ana.countFlash();
-  ana.measureInterval();
+  //ana.measureInterval();
+  ana.measure();
 }
 

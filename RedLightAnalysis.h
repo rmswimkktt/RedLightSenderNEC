@@ -9,6 +9,7 @@ public:
 public:
   void countFlash();
   void measureInterval();
+  void measure();
 
 private:
 };
