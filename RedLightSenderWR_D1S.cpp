@@ -81,3 +81,21 @@ void RedLightSenderWR_D1S::sendData(const unsigned int dataCode[]){
     }
   }
 }
+
+// OFF
+const unsigned int OFF[3] = {0x4DB2, 0x847B, 0x1FE0};
+void RedLightSenderWR_D1S::off(){
+  sendData(OFF);
+}
+
+// 暖房。25度。風量自動
+const unsigned int HEAT[3] = {0x4DB2, 0x40BF, 0x738C};
+void RedLightSenderWR_D1S::onHeating(){
+  sendData(HEAT);
+}
+
+// 冷房。28度。風量自動
+const unsigned int COOL[3] = {0x4DB2, 0x40BF, 0x7F80};
+void RedLightSenderWR_D1S::onCooling(){
+  sendData(COOL);
+}

@@ -8,6 +8,9 @@ public:
 
 public:
   void sendData(const unsigned int dataCode[]);
+  void off();
+  void onHeating();
+  void onCooling();
 
 private:
   void sendReaderCode();
