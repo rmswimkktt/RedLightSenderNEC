@@ -12,11 +12,11 @@ const unsigned long READER_CODE_LOW = 4350;
 const unsigned long STOP_LOW = 5100;
 const unsigned long STOP_HIGH = 620;
 
-byte m_redPin;
+byte m_redPinWR_D1S;
 
 RedLightSenderWR_D1S::RedLightSenderWR_D1S(const byte redPin){
-  m_redPin = redPin;
-  pinMode(m_redPin, OUTPUT);
+  m_redPinWR_D1S = redPin;
+  pinMode(m_redPinWR_D1S, OUTPUT);
 }
 
 // リーダーコードの送信を行う
@@ -42,10 +42,10 @@ void RedLightSenderWR_D1S::sendMainCode(const boolean onOff){
 // OFF,ON1回分のデータ送信を行う
 void RedLightSenderWR_D1S::sendCode(const unsigned long highInterval, const unsigned long lowInterval){
   unsigned long before = micros();
-  tone(m_redPin, RED_HERTZ);
+  tone(m_redPinWR_D1S, RED_HERTZ);
   while(before + highInterval > micros()){}
   before = micros();
-  noTone(m_redPin);
+  noTone(m_redPinWR_D1S);
   while(before + lowInterval > micros()){}
 }
 
