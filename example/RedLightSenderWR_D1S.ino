@@ -37,10 +37,10 @@ void loop(){
 
   delay(1000);
   Serial.println("HEAT");
-  red.onHeating();
+  red.onHeating(0);
   delay(1000);
   Serial.println("COOL");
-  red.onCooling();
+  red.onCooling(0);
   delay(1000);
   Serial.println("OFF");
   red.off();
