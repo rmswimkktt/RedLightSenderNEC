@@ -100,12 +100,18 @@ void RedLightSenderWR_D1S::off(){
 
 // 暖房。25度。風量自動
 const unsigned int HEAT[3] = {0x4DB2, 0x40BF, 0x738C};
+//24 B34C
+//23 A35C
+//22 837C
 void RedLightSenderWR_D1S::onHeating(){
   sendData(HEAT);
 }
 
 // 冷房。28度。風量自動
 const unsigned int COOL[3] = {0x4DB2, 0x40BF, 0x7F80};
+//27 6F90
+//26 2FD0
+//25 3FC0
 void RedLightSenderWR_D1S::onCooling(){
   sendData(COOL);
 }
