@@ -39,6 +39,16 @@ void RedLightSenderWR_D1S::sendMainCode(const boolean onOff){
   }
 }
 
+void tone(int pin, int freq){
+  ledcSetup(0, 5000, 8);
+  ledcAttachPin(pin, 0);
+  ledcWriteTone(0, freq);
+}
+
+void noTone(int pin){
+  ledcWriteTone(0, 0.0);
+}
+
 // OFF,ON1回分のデータ送信を行う
 void RedLightSenderWR_D1S::sendCode(const unsigned long highInterval, const unsigned long lowInterval){
   unsigned long before = micros();

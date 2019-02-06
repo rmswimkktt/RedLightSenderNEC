@@ -37,6 +37,16 @@ void RedLightSenderNEC::sendMainCode(boolean onOff){
   }
 }
 
+void tone(int pin, int freq){
+  ledcSetup(0, 5000, 8);
+  ledcAttachPin(pin, 0);
+  ledcWriteTone(0, freq);
+}
+
+void noTone(int pin){
+  ledcWriteTone(0, 0.0);
+}
+
 // ON,OFF1回分のデータ送信を行う
 void RedLightSenderNEC::sendCode(unsigned long highInterval, unsigned long lowInterval){
   unsigned long before = micros();
