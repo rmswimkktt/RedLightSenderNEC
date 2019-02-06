@@ -1,20 +1,17 @@
-#include "arduino.h"
-#include "RedLightSenderNEC.h"
+#include <RedLightSenderNEC.h>
 
-const unsigned int RED_HERTZ = 38000;
+static const unsigned int RED_HERTZ = 38000;
 
-const unsigned long HIGH_INTERVAL = 560;
-const unsigned long LOW_PATTERN = 1690;
-const unsigned long HIGH_PATTERN = 560;
-const unsigned long READER_CODE_HIGH = 9000;
-const unsigned long READER_CODE_LOW = 4500;
-const unsigned long STOP_INTERVAL = 5000;
-
-byte m_redPinNEC;
+static const unsigned long HIGH_INTERVAL = 560;
+static const unsigned long LOW_PATTERN = 1690;
+static const unsigned long HIGH_PATTERN = 560;
+static const unsigned long READER_CODE_HIGH = 9000;
+static const unsigned long READER_CODE_LOW = 4500;
+static const unsigned long STOP_INTERVAL = 5000;
 
 RedLightSenderNEC::RedLightSenderNEC(byte redPin){
-  m_redPinNEC = redPin;
-  pinMode(m_redPinNEC, OUTPUT);
+  m_redPin = redPin;
+  pinMode(m_redPin, OUTPUT);
 }
 
 // リーダーコードの送信を行う
@@ -37,23 +34,23 @@ void RedLightSenderNEC::sendMainCode(boolean onOff){
   }
 }
 
-void tone(int pin, int freq){
+void RedLightSenderNEC::tone(int pin, int freq){
   ledcSetup(0, 5000, 8);
   ledcAttachPin(pin, 0);
   ledcWriteTone(0, freq);
 }
 
-void noTone(int pin){
+void RedLightSenderNEC::noTone(int pin){
   ledcWriteTone(0, 0.0);
 }
 
 // ON,OFF1回分のデータ送信を行う
 void RedLightSenderNEC::sendCode(unsigned long highInterval, unsigned long lowInterval){
   unsigned long before = micros();
-  tone(m_redPinNEC, RED_HERTZ);
+  tone(m_redPin, RED_HERTZ);
   while(before + highInterval > micros()){}
   before = micros();
-  noTone(m_redPinNEC);
+  noTone(m_redPin);
   while(before + lowInterval > micros()){}
 }
 

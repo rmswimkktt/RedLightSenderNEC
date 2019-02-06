@@ -1,22 +1,19 @@
-#include "arduino.h"
-#include "RedLightSenderWR_D1S.h"
+#include <RedLightSenderWR_D1S.h>
 
-const unsigned int RED_HERTZ = 38000;
+static const unsigned int RED_HERTZ = 38000;
 
-const unsigned long HIGH_INTERVAL = 460;
-const unsigned long LOW_INTERVAL = 1550;
-const unsigned long LOW_PATTERN = 620;
-const unsigned long HIGH_PATTERN = 620;
-const unsigned long READER_CODE_HIGH = 4550;
-const unsigned long READER_CODE_LOW = 4350;
-const unsigned long STOP_LOW = 5100;
-const unsigned long STOP_HIGH = 620;
-
-byte m_redPinWR_D1S;
+static const unsigned long HIGH_INTERVAL = 460;
+static const unsigned long LOW_INTERVAL = 1550;
+static const unsigned long LOW_PATTERN = 620;
+static const unsigned long HIGH_PATTERN = 620;
+static const unsigned long READER_CODE_HIGH = 4550;
+static const unsigned long READER_CODE_LOW = 4350;
+static const unsigned long STOP_LOW = 5100;
+static const unsigned long STOP_HIGH = 620;
 
 RedLightSenderWR_D1S::RedLightSenderWR_D1S(const byte redPin){
-  m_redPinWR_D1S = redPin;
-  pinMode(m_redPinWR_D1S, OUTPUT);
+  m_redPin = redPin;
+  pinMode(m_redPin, OUTPUT);
 }
 
 // リーダーコードの送信を行う
@@ -39,23 +36,23 @@ void RedLightSenderWR_D1S::sendMainCode(const boolean onOff){
   }
 }
 
-void tone(int pin, int freq){
+void RedLightSenderWR_D1S::tone(int pin, int freq){
   ledcSetup(0, 5000, 8);
   ledcAttachPin(pin, 0);
   ledcWriteTone(0, freq);
 }
 
-void noTone(int pin){
+void RedLightSenderWR_D1S::noTone(int pin){
   ledcWriteTone(0, 0.0);
 }
 
 // OFF,ON1回分のデータ送信を行う
 void RedLightSenderWR_D1S::sendCode(const unsigned long highInterval, const unsigned long lowInterval){
   unsigned long before = micros();
-  tone(m_redPinWR_D1S, RED_HERTZ);
+  tone(m_redPin, RED_HERTZ);
   while(before + highInterval > micros()){}
   before = micros();
-  noTone(m_redPinWR_D1S);
+  noTone(m_redPin);
   while(before + lowInterval > micros()){}
 }
 
@@ -93,25 +90,29 @@ void RedLightSenderWR_D1S::sendData(const unsigned int dataCode[]){
 }
 
 // OFF
-const unsigned int OFF[3] = {0x4DB2, 0x847B, 0x1FE0};
+static const unsigned int OFF[3] = {0x4DB2, 0x847B, 0x1FE0};
 void RedLightSenderWR_D1S::off(){
   sendData(OFF);
 }
 
 // 暖房。25度。風量自動
-const unsigned int HEAT[3] = {0x4DB2, 0x40BF, 0x738C};
-//24 B34C
-//23 A35C
-//22 837C
-void RedLightSenderWR_D1S::onHeating(){
-  sendData(HEAT);
+static const unsigned int HEAT[4][3] = {
+  {0x4DB2, 0x40BF, 0x738C}, //25
+  {0x4DB2, 0x40BF, 0xB34C}, //24
+  {0x4DB2, 0x40BF, 0xA35C}, //23
+  {0x4DB2, 0x40BF, 0x837C}  //22
+};
+void RedLightSenderWR_D1S::onHeating(byte i){
+  sendData(HEAT[i]);
 }
 
 // 冷房。28度。風量自動
-const unsigned int COOL[3] = {0x4DB2, 0x40BF, 0x7F80};
-//27 6F90
-//26 2FD0
-//25 3FC0
-void RedLightSenderWR_D1S::onCooling(){
-  sendData(COOL);
+static const unsigned int COOL[4][3] = {
+  {0x4DB2, 0x40BF, 0x7F80}, //28
+  {0x4DB2, 0x40BF, 0x6F90}, //27
+  {0x4DB2, 0x40BF, 0x2FD0}, //26
+  {0x4DB2, 0x40BF, 0x3FC0}  //25
+};
+void RedLightSenderWR_D1S::onCooling(byte i){
+  sendData(COOL[i]);
 }
