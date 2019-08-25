@@ -97,22 +97,52 @@ void RedLightSenderWR_D1S::off(){
 
 // 暖房。25度。風量自動
 static const unsigned int HEAT[4][3] = {
-  {0x4DB2, 0x40BF, 0x738C}, //25
-  {0x4DB2, 0x40BF, 0xB34C}, //24
+  {0x4DB2, 0x40BF, 0x837C},  //22
   {0x4DB2, 0x40BF, 0xA35C}, //23
-  {0x4DB2, 0x40BF, 0x837C}  //22
+  {0x4DB2, 0x40BF, 0xB34C}, //24
+  {0x4DB2, 0x40BF, 0x738C} //25
 };
 void RedLightSenderWR_D1S::onHeating(byte i){
   sendData(HEAT[i]);
 }
 
-// 冷房。28度。風量自動
+// 冷房
 static const unsigned int COOL[4][3] = {
-  {0x4DB2, 0x40BF, 0x7F80}, //28
-  {0x4DB2, 0x40BF, 0x6F90}, //27
+  //風量自動
+  {0x4DB2, 0x40BF, 0x3FC0}, //25
   {0x4DB2, 0x40BF, 0x2FD0}, //26
-  {0x4DB2, 0x40BF, 0x3FC0}  //25
+  {0x4DB2, 0x40BF, 0x6F90}, //27
+  {0x4DB2, 0x40BF, 0x7F80} //28
+  // //風量3
+  // {0x4DB2, 0xC03F, 0x3FC0}, //25
+  // {0x4DB2, 0xC03F, 0x2FD0}, //26
+  // {0x4DB2, 0xC03F, 0x6F90}, //27
+  // {0x4DB2, 0xC03F, 0x7F80}  //28
 };
+
+// 冷房
+static const unsigned int COOL_SILENT[2][4][3] = {
+  //風量しずか
+  {{0x4DB2, 0x1FE0, 0xFD02}, //25
+  {0x4DB2, 0x1FE0, 0xFD02}, //26
+  {0x4DB2, 0x1FE0, 0xFD02}, //27
+  {0x4DB2, 0x1FE0, 0xFD02}},//28
+  {{0x4DB2, 0x40BF, 0x3FC0},
+  {0x4DB2, 0x40BF, 0x2FD0},
+  {0x4DB2, 0x40BF, 0x6F90},
+  {0x4DB2, 0x40BF, 0x7F80}}
+};
+
 void RedLightSenderWR_D1S::onCooling(byte i){
-  sendData(COOL[i]);
+  Serial.printf("%d", i);
+  if(i < 4){
+    sendData(COOL[i]);
+    Serial.printf("%X%X%X", COOL[i][0], COOL[i][1], COOL[i][2]);
+  } else {
+    i = i - 4;
+    sendData(COOL_SILENT[0][i]);
+    sendData(COOL_SILENT[1][i]);
+    Serial.printf("%X%X%X", COOL_SILENT[0][i][0], COOL_SILENT[0][i][1], COOL_SILENT[0][i][2]);
+    Serial.printf("%X%X%X", COOL_SILENT[1][i][0], COOL_SILENT[1][i][1], COOL_SILENT[1][i][2]);
+  }
 }

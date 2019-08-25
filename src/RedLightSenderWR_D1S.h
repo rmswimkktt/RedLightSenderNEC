@@ -6,6 +6,7 @@ class RedLightSenderWR_D1S{
   public:
     RedLightSenderWR_D1S(byte redPin);
     void sendData(const unsigned int dataCode[]);
+    void sendDataLong(const unsigned int dataCode[]);
     void off();
     void onHeating(byte i);
     void onCooling(byte i);
