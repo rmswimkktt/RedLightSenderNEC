@@ -63,7 +63,7 @@ void RedLightSenderWR_D1S::sendDataCode(const unsigned int dataCode[]){
     Serial.println(sizeof(dataCode) / sizeof(dataCode[0]));
   }*/
   //else{
-    for(int j = 0; j < 3; j++){
+    for(int j = 1; j < 4; j++){
       unsigned int code = dataCode[j];
       for(int i = 0; i < 16; i++){
         boolean onOff = bitRead(code, 15);
@@ -77,7 +77,9 @@ void RedLightSenderWR_D1S::sendDataCode(const unsigned int dataCode[]){
 
 // 赤外線送信
 void RedLightSenderWR_D1S::sendData(const unsigned int dataCode[]){
-  for(int i = 0; i < 2; i++){
+  Serial.printf("Set Temp: %d\n", dataCode[0]);
+  for (int i = 0; i < 2; i++)
+  {
     // リーダーコード
     sendReaderCode();
     // カスタム・データコード
@@ -90,28 +92,28 @@ void RedLightSenderWR_D1S::sendData(const unsigned int dataCode[]){
 }
 
 // OFF
-static const unsigned int OFF[3] = {0x4DB2, 0x847B, 0x1FE0};
+static const unsigned int OFF[4] = {0, 0x4DB2, 0x847B, 0x1FE0};
 void RedLightSenderWR_D1S::off(){
   sendData(OFF);
 }
 
 // 暖房。25度。風量自動
-static const unsigned int HEAT[4][3] = {
-  {0x4DB2, 0x40BF, 0x738C}, //25
-  {0x4DB2, 0x40BF, 0xB34C}, //24
-  {0x4DB2, 0x40BF, 0xA35C}, //23
-  {0x4DB2, 0x40BF, 0x837C}  //22
+static const unsigned int HEAT[4][4] = {
+  {22, 0x4DB2, 0x40BF, 0x837C}, //22
+  {23, 0x4DB2, 0x40BF, 0xA35C}, //23
+  {24, 0x4DB2, 0x40BF, 0xB34C}, //24
+  {25, 0x4DB2, 0x40BF, 0x738C}  //25
 };
 void RedLightSenderWR_D1S::onHeating(byte i){
   sendData(HEAT[i]);
 }
 
 // 冷房。28度。風量自動
-static const unsigned int COOL[4][3] = {
-  {0x4DB2, 0x40BF, 0x7F80}, //28
-  {0x4DB2, 0x40BF, 0x6F90}, //27
-  {0x4DB2, 0x40BF, 0x2FD0}, //26
-  {0x4DB2, 0x40BF, 0x3FC0}  //25
+static const unsigned int COOL[4][4] = {
+  {25, 0x4DB2, 0x40BF, 0x3FC0}, //25
+  {26, 0x4DB2, 0x40BF, 0x2FD0}, //26
+  {27, 0x4DB2, 0x40BF, 0x6F90}, //27
+  {28, 0x4DB2, 0x40BF, 0x7F80}  //28
 };
 void RedLightSenderWR_D1S::onCooling(byte i){
   sendData(COOL[i]);
